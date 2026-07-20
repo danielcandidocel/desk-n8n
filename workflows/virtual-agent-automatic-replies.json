@@ -1,0 +1,156 @@
+{
+  "id": "miXbbSetTO982ZbZ",
+  "name": "Virtual Agent - Automatic Replies",
+  "nodes": [
+    {
+      "parameters": {
+        "queue": "virtual-agent-requests",
+        "options": {
+          "acknowledge": "executionFinishes",
+          "jsonParseBody": true,
+          "onlyContent": false,
+          "parallelMessages": 1
+        }
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "d6e16d83-7fb7-4d2c-b4d1-6a4d5f7d4a01",
+      "name": "RabbitMQ Trigger",
+      "type": "n8n-nodes-base.rabbitmqTrigger",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\nconst knowledgeBase = `Apresentação da empresa\nSomos uma software house especializada em implantação, sustentação e evolução de sistemas para hospitais, clínicas, laboratórios e centros de diagnóstico.\nAtuamos em suporte funcional e técnico, análise de incidentes, resolução de bugs, instalação, parametrização, treinamento, go-live assistido e acompanhamento pós-implantação.\nNosso foco é garantir continuidade operacional, segurança da informação, rastreabilidade e rapidez no atendimento.\n\n---\nEscopo de atendimento\nAtendemos dúvidas sobre:\n1. instalação e atualização do sistema\n2. acesso de usuários, perfis e permissões\n3. cadastro de pacientes, convênios, médicos, setores, unidades e serviços\n4. faturamento, autorização, glosas e integrações\n5. exames, laudos, agendamentos, internação e ambulatório\n6. relatórios, dashboards, telas operacionais e parametrizações\n7. erros, falhas, lentidão, inconsistências e comportamento inesperado\n8. dúvidas de uso e orientação funcional\n9. implantação, migração e pós-implantação\n10. suporte de rotina, incidentes críticos e análise técnica\n\n---\nInstalação, atualização e implantação\nA implantação do sistema normalmente segue estas etapas:\n1. levantamento de requisitos\n2. definição de escopo e módulos\n3. preparação do ambiente\n4. configuração de bancos, serviços e integrações\n5. cadastro base e parametrização inicial\n6. validação com usuários-chave\n7. testes assistidos\n8. treinamento da operação\n9. virada assistida para produção\n10. monitoramento pós-go-live\n\nEm casos de instalação, atualização ou implantação, solicitar:\n- nome da instituição\n- módulo afetado\n- ambiente (teste, homologação ou produção)\n- versão do sistema, se houver\n- data e horário do problema\n- etapa exata em que a operação travou\n- print, vídeo, log ou mensagem exibida\n- se houve mudança recente de infraestrutura, regra, versão ou integração\n\nSe houver atualização, verificar também:\n- necessidade de backup\n- janela de manutenção\n- impacto em integrações\n- dependências de serviço\n- necessidade de rollback\n\n---\nSuporte funcional\nQuando o cliente tiver dúvida de uso do sistema:\n- explicar o caminho da tela de forma objetiva\n- citar o nome exato de botões, menus e campos\n- indicar a sequência de ações correta\n- confirmar se a permissão do usuário permite executar a tarefa\n- informar quando o comportamento depende de parametrização por unidade, perfil ou módulo\n- pedir print da tela atual caso a localização da função não esteja clara\n\nO suporte funcional deve responder perguntas como:\n- como cadastrar um paciente\n- como emitir um laudo\n- como abrir um atendimento\n- como gerar um faturamento\n- como configurar uma agenda\n- como lançar um procedimento\n- como localizar um exame ou histórico\n\nCadastro de paciente - procedimento padrão\n1. Acesse o menu de pacientes ou cadastro.\n2. Clique em novo cadastro ou incluir paciente.\n3. Preencha os dados principais: nome completo, documento, data de nascimento, sexo, telefone e e-mail.\n4. Informe endereço, convênio, responsável, unidade ou observações, quando necessário.\n5. Revise os campos obrigatórios e salve o cadastro.\n6. Se o sistema pedir validação, confirme se o paciente já existe antes de salvar novamente.\n7. Se a tela for parametrizada por unidade ou perfil, verifique a permissão do usuário antes de orientar.\n\n---\nSuporte técnico e bugs\nQuando o cliente relatar erro ou falha:\n1. confirmar usuário, perfil e unidade\n2. confirmar módulo e tela\n3. confirmar data e horário da ocorrência\n4. pedir a mensagem exata do erro\n5. verificar se o problema é intermitente ou constante\n6. verificar se afeta um usuário, um setor ou toda a operação\n7. identificar se é ambiente de teste, homologação ou produção\n8. classificar impacto operacional\n\nSe possível, pedir também:\n- print da tela\n- gravação curta\n- trecho de log\n- passo a passo para reproduzir\n- navegador, dispositivo ou terminal usado\n- se começou após alguma alteração recente\n\nNunca inventar solução sem evidência. Se o problema envolver dados, banco, API, fila, autorização, desempenho ou integração, seguir para análise técnica ou escalar para especialista humano.\n\n---\nIntegrações\nIntegrações comuns no cenário hospitalar podem envolver:\n- laboratório\n- equipamento médico\n- faturamento e convênios\n- portal de laudos\n- autenticação e login\n- filas de processamento\n- mensageria assíncrona\n- APIs externas e webhooks\n- importação e exportação de dados\n\nSe uma integração falhar, verificar:\n- credenciais e permissões\n- URL e ambiente corretos\n- tempo de resposta e timeout\n- retorno HTTP e payload\n- fila de processamento e consumidores\n- logs da aplicação e do integrador\n- certificados, chaves ou tokens, quando aplicável\n\n---\nPriorização de chamados\nPrioridade alta:\n- sistema fora do ar\n- falha que impede atendimento a pacientes\n- erro em faturamento ou emissão crítica\n- indisponibilidade em produção\n- risco de parar a operação hospitalar\n- perda de dados ou inconsistência grave\n\nPrioridade média:\n- erro com contorno manual\n- falha em um fluxo específico\n- inconsistência de cadastro ou relatório\n- dúvida funcional que bloqueia parcialmente a equipe\n\nPrioridade baixa:\n- dúvidas de navegação\n- ajustes não críticos\n- pedidos de orientação\n- melhorias e customizações sem urgência operacional\n\n---\nRegras de resposta\nAo responder ao cliente:\n- usar português do Brasil\n- ser objetivo, claro e acolhedor\n- confirmar o entendimento antes de propor solução\n- indicar o próximo passo com precisão\n- solicitar apenas a informação que realmente falta\n- evitar termos desnecessariamente complexos\n- não prometer prazo sem validação interna\n- manter tom técnico, seguro e cordial\n\nFormato ideal da resposta:\n1. reconhecer o problema\n2. resumir o entendimento\n3. orientar o próximo passo\n4. pedir o que faltar\n5. informar se será necessário escalar\n\n---\nEscalonamento para humano\nEncaminhar para um atendente humano quando:\n- o incidente afetar produção\n- houver risco operacional para o hospital\n- a base de conhecimento não for suficiente\n- houver necessidade de análise de logs, banco ou código\n- a falha depender de validação interna\n- o cliente pedir investigação detalhada fora do escopo do bot\n- a resposta envolver análise de segurança, performance ou dados sensíveis\n\n---\nConhecimento operacional\nO agente deve conhecer que a operação hospitalar pode envolver:\n- pronto atendimento\n- ambulatório\n- internação\n- centro cirúrgico\n- laboratório\n- imagem\n- recepção\n- agendamento\n- cadastro\n- estoque\n- financeiro\n- faturamento\n- relatórios gerenciais\n\n---\nExemplos de resposta\nExemplo 1:\n\"Entendi. Você está com dificuldade na emissão do documento no módulo de faturamento. Pode me informar o paciente, a data e a mensagem exibida na tela para eu orientar o próximo passo?\"\n\nExemplo 2:\n\"Vou te ajudar com isso. Me confirma se o erro acontece em produção ou homologação e, se possível, me envia um print da tela para eu validar a causa.\"\n\nExemplo 3:\n\"Esse tipo de falha pode impactar a operação do hospital. Vou encaminhar para validação técnica e, enquanto isso, preciso da tela exata, horário e usuário afetado.\"\n\n---\nObjetivo final\nGarantir que o hospital continue operando com segurança, estabilidade e rapidez na resolução dos chamados, mantendo rastreabilidade, boa experiência e continuidade do atendimento.`;\n\nreturn items.map((item) => ({\n  json: {\n    ...(item.json ?? {}),\n    knowledge_base: knowledgeBase,\n    knowledge_matches: [],\n  },\n}));"
+      },
+      "id": "b7d3c5cf-83ee-4d1a-9e3d-0a3e3f1d2b11",
+      "name": "Base Técnica do Cliente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction clean(value) {\n  return String(value ?? '').trim();\n}\n\nfunction stripAccents(value) {\n  return Array.from(clean(value).normalize('NFD'))\n    .filter((char) => {\n      const code = char.codePointAt(0);\n      return code < 0x300 || code > 0x36f;\n    })\n    .join('')\n    .toLowerCase();\n}\n\nfunction tokenize(text) {\n  const normalized = stripAccents(text);\n  const tokens = [];\n  let current = '';\n\n  for (const char of normalized) {\n    const code = char.codePointAt(0);\n    const isWordChar = (code >= 97 && code <= 122) || (code >= 48 && code <= 57);\n\n    if (isWordChar) {\n      current += char;\n      continue;\n    }\n\n    if (current) {\n      tokens.push(current);\n      current = '';\n    }\n  }\n\n  if (current) {\n    tokens.push(current);\n  }\n\n  return Array.from(new Set(tokens.filter((token) => token.length > 2)));\n}\n\nfunction applyAliases(tokens) {\n  const aliasMap = {\n    usar: ['uso', 'utilizar', 'funcional', 'funcionalidade', 'operar'],\n    uso: ['usar', 'utilizar', 'funcional', 'funcionalidade'],\n    sistema: ['plataforma', 'painel', 'funcional', 'funcionalidade', 'uso'],\n    cadastrar: ['cadastro', 'registrar', 'incluir', 'novo'],\n    cadastro: ['cadastrar', 'registrar', 'incluir'],\n    paciente: ['pacientes', 'cadastro paciente', 'cadastro de paciente', 'registro paciente'],\n    pacientes: ['paciente', 'cadastro paciente', 'cadastro de paciente'],\n    usuario: ['usuario', 'usuarios', 'acesso', 'perfil'],\n    usuarios: ['usuario', 'acesso', 'perfil'],\n    acesso: ['login', 'senha', 'perfil', 'usuario'],\n    senha: ['acesso', 'login', 'usuario'],\n    instalar: ['instalacao', 'implantar', 'implantacao', 'configurar'],\n    instalacao: ['instalar', 'implantacao', 'configurar'],\n    implantacao: ['implantar', 'instalacao', 'configurar'],\n    implantar: ['instalacao', 'implantacao', 'configurar'],\n    bug: ['erro', 'falha', 'inconsistencia', 'problema'],\n    erro: ['bug', 'falha', 'problema'],\n    exame: ['exames', 'laudo', 'laboratorio', 'resultado'],\n    exames: ['exame', 'laudo', 'laboratorio'],\n    faturamento: ['faturar', 'guia', 'convenio', 'cobranca'],\n    treinamento: ['treinar', 'capacitacao', 'usuarios'],\n    prontuario: ['prontuario', 'evolucao', 'atendimento'],\n  };\n\n  const expanded = [];\n\n  for (const token of tokens) {\n    expanded.push(token);\n    const aliases = aliasMap[token] || [];\n\n    for (const alias of aliases) {\n      const normalizedAlias = stripAccents(alias).replace(/[^a-z0-9]+/g, '');\n      if (normalizedAlias) {\n        expanded.push(normalizedAlias);\n      }\n    }\n  }\n\n  return Array.from(new Set(expanded.filter(Boolean)));\n}\n\nfunction splitKnowledgeBase(text) {\n  return clean(text)\n    .split('\\n---\\n')\n    .map((segment, index) => {\n      const content = clean(segment);\n      if (!content) return null;\n      const lines = content.split(/\\r?\\n/);\n      const title = clean(lines[0]).slice(0, 90) || ('Bloco ' + (index + 1));\n      return { index: index + 1, title, content };\n    })\n    .filter(Boolean);\n}\n\nfunction scoreBlocks(query, blocks) {\n  const tokens = applyAliases(tokenize(query));\n\n  return blocks\n    .map((block) => {\n      const haystack = stripAccents((block.title || '') + ' ' + (block.content || ''));\n      const titleHaystack = stripAccents(block.title || '');\n      let score = 0;\n\n      for (const token of tokens) {\n        if (haystack.includes(token)) {\n          score += titleHaystack.includes(token) ? 3 : 1;\n        }\n      }\n\n      return { ...block, score };\n    })\n    .sort((a, b) => b.score - a.score);\n}\n\nfunction formatTimeline(timeline) {\n  return (Array.isArray(timeline) ? timeline : [])\n    .slice(-20)\n    .map((entry) => {\n      const direction = clean(entry.direction).toLowerCase() || 'message';\n      const author = clean(entry.sender_name ?? entry.author ?? (direction === 'outbound' ? 'Agente' : 'Cliente')) || (direction === 'outbound' ? 'Agente' : 'Cliente');\n      const body = clean(entry.body);\n      return '- ' + author + ' (' + direction + '): ' + body;\n    })\n    .join('\\n');\n}\n\nfunction formatKnowledge(blocks) {\n  return (Array.isArray(blocks) ? blocks : [])\n    .slice(0, 4)\n    .map((block, index) => {\n      const title = clean(block.title || ('Bloco ' + (index + 1)));\n      const content = clean(block.content || '');\n      return String(index + 1) + '. ' + title + '\\n' + content;\n    })\n    .join('\\n\\n---\\n\\n');\n}\n\nfunction buildSummary(messageBody, timeline) {\n  const parts = [];\n  const recent = formatTimeline(timeline);\n\n  if (messageBody) {\n    parts.push('Cliente perguntou: \"' + messageBody + '\"');\n  }\n\n  if (recent) {\n    parts.push('Histórico recente:\\n' + recent);\n  }\n\n  return parts.join('\\n');\n}\n\nfunction isGreetingOnly(messageBody) {\n  const text = stripAccents(messageBody).replace(/[^a-z0-9\\s]/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return true;\n\n  const greetingWords = ['oi', 'ola', 'bom dia', 'boa tarde', 'boa noite', 'tudo bem', 'tudo certo', 'e ai', 'hello', 'olá'];\n  const isShort = text.length <= 25;\n  const hasGreeting = greetingWords.some((phrase) => text === phrase || text.startsWith(phrase + ' ') || text.includes(' ' + phrase + ' '));\n\n  return hasGreeting && isShort;\n}\n\nfunction isLikelyQuestion(messageBody) {\n  const text = stripAccents(messageBody).trim();\n  if (!text) return false;\n\n  const questionWords = ['como', 'quando', 'onde', 'porque', 'por que', 'qual', 'quais', 'preciso', 'quero', 'pode', 'poderia', 'deu erro', 'nao consigo', 'não consigo', 'me ajuda', 'ajuda'];\n  const hasQuestionMark = messageBody.includes('?');\n  const startsLikeQuestion = questionWords.some((word) => text.startsWith(word));\n  const containsProblem = ['erro', 'falha', 'bug', 'problema', 'instalar', 'cadastrar', 'atualizar', 'faturamento', 'laudo', 'exame', 'usar', 'uso'].some((word) => text.includes(word));\n\n  return hasQuestionMark || startsLikeQuestion || containsProblem;\n}\n\nfunction isBroadHelpRequest(messageBody) {\n  const text = stripAccents(messageBody).replace(/\\s+/g, ' ').trim();\n\n  if (!text) {\n    return true;\n  }\n\n  const phrases = [\n    'pode me ajudar',\n    'me ajuda',\n    'preciso de ajuda',\n    'quero ajuda',\n    'como usar o sistema',\n    'como funciona o sistema',\n    'como usar',\n    'como funciona',\n    'me orienta',\n    'me orientar',\n    'me explique',\n    'explica pra mim',\n    'ajuda',\n  ];\n\n  return phrases.some((phrase) => text === phrase || text.startsWith(phrase + ' ') || text.includes(' ' + phrase + ' '));\n}\n\nfunction buildStepReply(match, messageBody) {\n\n  const title = stripAccents(clean(match?.title || ''));\n  const contentLines = clean(match?.content || '')\n    .split(/\\r?\\n/)\n    .map((line) => line.trim())\n    .filter(Boolean);\n\n  const stepLines = contentLines\n    .filter((line) => {\n      const first = line.charCodeAt(0);\n      return (first >= 48 && first <= 57) || line.startsWith('-') || line.startsWith('•');\n    })\n    .map((line) => line.replace(/^\\d+\\.\\s*/, '').replace(/^[-•]\\s*/, '').trim())\n    .filter(Boolean)\n    .slice(0, 6);\n\n  if (title.includes('cadastro de paciente') || title.includes('cadastro paciente') || stripAccents(match?.content || '').includes('cadastro de paciente')) {\n    return [\n      'Claro. Para cadastrar um paciente, siga este passo a passo:',\n      '- Acesse o menu de pacientes ou cadastro.',\n      '- Clique em novo cadastro ou incluir paciente.',\n      '- Preencha nome, documento, data de nascimento, sexo, telefone e e-mail.',\n      '- Se necessário, informe endereço, convênio, responsável e unidade.',\n      '- Revise os campos obrigatórios e salve.',\n      '',\n      'Se quiser, eu posso detalhar um campo específico.'\n    ].join('\\n');\n  }\n\n  if (title.includes('suporte funcional') || title.includes('dúvida de uso') || title.includes('duvida de uso')) {\n    return [\n      'Claro — posso te orientar.',\n      'Me diz qual parte do sistema você quer usar:',\n      '- Pacientes',\n      '- Atendimento',\n      '- Faturamento',\n      '- Exames ou laudos',\n      '- Agenda',\n      '',\n      'Se preferir, já me fala o objetivo final que eu te passo o caminho.'\n    ].join('\\n');\n  }\n\n  if (title.includes('instalação') || title.includes('implantação')) {\n    return [\n      'Perfeito, vamos por partes.',\n      'Para te orientar melhor na instalação ou implantação, preciso saber:',\n      '- Se é teste, homologação ou produção',\n      '- Qual módulo está em andamento',\n      '- Em que etapa travou',\n      '- Se apareceu alguma mensagem de erro',\n      '',\n      'Com isso eu consigo te passar o próximo passo certo.'\n    ].join('\\n');\n  }\n\n  if (title.includes('suporte técnico') || title.includes('bugs') || title.includes('erro')) {\n    return [\n      'Entendi. Vamos validar isso com calma.',\n      'Me manda, por favor:',\n      '- módulo e tela',\n      '- horário do erro',\n      '- mensagem exata exibida',\n      '- se está acontecendo com todo mundo ou só com um usuário',\n      '',\n      'Assim eu consigo te orientar melhor ou encaminhar para análise técnica.'\n    ].join('\\n');\n  }\n\n  if (stepLines.length > 0) {\n    return [\n      'Claro. Pelo que encontrei na base, siga este passo a passo:',\n      ...stepLines.map((line) => '- ' + line),\n      '',\n      'Se quiser, eu também posso detalhar um campo específico.'\n    ].join('\\n');\n  }\n\n  const excerpt = contentLines.slice(1, 4).join(' ').trim();\n  return excerpt\n    ? 'Claro. Pela base técnica, a orientação é: ' + excerpt + ' Se quiser, eu posso detalhar o próximo passo.'\n    : 'Claro. Pela base técnica, consigo te orientar, mas preciso de um detalhe a mais para te passar o passo a passo certo.';\n}\n\nreturn items.map((item) => {\n  const payload = item.json ?? {};\n  const company = payload.company ?? {};\n  const agent = payload.agent ?? {};\n  const message = payload.message ?? {};\n  const conversation = payload.conversation ?? {};\n  const timeline = Array.isArray(payload.timeline) ? payload.timeline : [];\n  const knowledgeBase = clean(payload.knowledge_base ?? '');\n  const companyName = clean(company.trade_name ?? company.name ?? payload.company_name ?? 'a empresa') || 'a empresa';\n  const agentName = clean(agent.name ?? 'Stark') || 'Stark';\n  const assistantName = agentName;\n  const messageBody = clean(message.body ?? payload.request?.message ?? '');\n  const searchText = [messageBody, clean(payload.search_query ?? payload.searchQuery ?? ''), formatTimeline(timeline)].filter(Boolean).join(' ');\n\n  const blocks = splitKnowledgeBase(knowledgeBase);\n  const scoredBlocks = scoreBlocks(searchText, blocks);\n  const knowledgeMatches = scoredBlocks.filter((block) => block.score > 0).slice(0, 3).map(({ score, ...block }) => block);\n  const likelyQuestion = isLikelyQuestion(messageBody) || isLikelyQuestion(searchText);\n  const greetingOnly = isGreetingOnly(messageBody) && !likelyQuestion;\n  const broadHelpRequest = isBroadHelpRequest(messageBody) || isBroadHelpRequest(searchText);\n  const canAnswer = knowledgeMatches.length > 0;\n  const summary = buildSummary(messageBody, timeline);\n\nconst greetingReply = [\n  'Oi! Tudo bem?',\n  'Sou o Stark e estou por aqui para te ajudar com o sistema.',\n  'Me conta o que você precisa e eu te guio.'\n].join(' ');\n\nconst broadHelpReply = [\n  'Claro. Posso te ajudar com cadastro, faturamento, exames, instalação, integração ou algum erro no sistema.',\n  'Se quiser, me diz exatamente o que você está tentando fazer e eu sigo com você passo a passo.'\n].join(' ');\n\nconst directReply = canAnswer\n  ? buildStepReply(knowledgeMatches[0], messageBody)\n  : '';\n\nconst handoffSummary = summary || 'Cliente pediu ajuda, mas não foi possível identificar uma resposta segura na base.';\nconst handoffReply = 'Vou encaminhar seu atendimento para a equipe dar continuidade.';\n\nlet finalReply = greetingReply;\nlet handoffToHuman = false;\nlet category = 'saudacao';\nlet notes = 'Mensagem de abertura; resposta curta e acolhedora.';\n\nif (likelyQuestion) {\n  if (canAnswer) {\n    finalReply = directReply;\n    category = 'suporte';\n    notes = 'Resposta baseada na base técnica do cliente.';\n  } else if (broadHelpRequest) {\n    finalReply = broadHelpReply;\n    category = 'abertura';\n    notes = 'Pedido amplo de ajuda; resposta acolhedora com direcionamento.';\n  } else {\n    finalReply = handoffReply;\n    handoffToHuman = true;\n    category = 'handoff';\n    notes = 'Sem base suficiente para responder com segurança.';\n  }\n} else if (greetingOnly) {\n  finalReply = greetingReply;\n  category = 'saudacao';\n} else if (broadHelpRequest) {\n  finalReply = broadHelpReply;\n  category = 'abertura';\n  notes = 'Pedido amplo de ajuda; resposta acolhedora com direcionamento.';\n} else if (canAnswer) {\n  finalReply = directReply;\n  category = 'suporte';\n  notes = 'Resposta baseada na base técnica do cliente.';\n}\n\nconst finalConfidence = greetingOnly ? 0.9 : (canAnswer ? 0.96 : (broadHelpRequest ? 0.7 : (likelyQuestion ? 0.1 : 0.6)));\n\n\n  return {\n    json: {\n      ...payload,\n      company,\n      agent,\n      conversation,\n      company_name: companyName,\n      assistant_name: assistantName,\n      knowledge_base: knowledgeBase,\n      knowledge_matches: knowledgeMatches,\n      timeline,\n      conversation_summary: summary,\n      response_mode: greetingOnly ? 'greeting' : (likelyQuestion ? 'analysis' : 'support'),\n      final_reply: finalReply,\n      final_handoff_to_human: handoffToHuman,\n      final_confidence: finalConfidence,\n      final_category: category,\n      final_notes: notes,\n      handoff_message: handoffReply,\n      handoff_summary: handoffSummary,\n      replied_to_message_id: Number(payload.message_id ?? payload.replied_to_message_id ?? 0) || null,\n      external_message_id: String(payload.external_message_id ?? ('virtual-agent-response:' + (payload.message_id ?? Date.now()))),\n      final_reply_debug: {\n        greeting_only: greetingOnly,\n        likely_question: likelyQuestion,\n        can_answer: canAnswer,\n        knowledge_titles: knowledgeMatches.map((match) => match.title),\n      },\n    },\n  };\n});\n"
+      },
+      "id": "a3fd3ef6-1c2b-4d1f-8f3b-0797f3a7f6c1",
+      "name": "Preparar Contexto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction text(value) {\n  return String(value ?? '').trim();\n}\n\nreturn items.map((item) => {\n  const payload = item.json ?? {};\n  const reply = text(payload.final_reply ?? payload.reply ?? payload.handoff_message);\n  const handoffToHuman = Boolean(payload.final_handoff_to_human ?? payload.handoff_to_human ?? false);\n\n  return {\n    json: {\n      ...payload,\n      company_id: payload.company_id ?? payload.company?.id ?? null,\n      conversation_id: payload.conversation_id ?? null,\n      replied_to_message_id: Number(payload.replied_to_message_id ?? payload.message_id ?? 0) || null,\n      external_message_id: text(payload.external_message_id ?? ('virtual-agent-response:' + (payload.replied_to_message_id ?? payload.message_id ?? Date.now()))),\n      reply: reply,\n      handoff_to_human: handoffToHuman,\n      assistant_name: text(payload.assistant_name ?? payload.agent?.name ?? 'Stark') || 'Stark',\n      confidence: Number(payload.final_confidence ?? payload.confidence ?? (handoffToHuman ? 0 : 0.95)),\n      category: text(payload.final_category ?? payload.category ?? (handoffToHuman ? 'handoff' : 'suporte')) || 'suporte',\n      notes: text(payload.final_notes ?? payload.notes ?? ''),\n      summary: text(payload.handoff_summary ?? payload.conversation_summary ?? payload.summary ?? ''),\n      handoff_message: text(payload.handoff_message ?? ''),\n    },\n  };\n});\n"
+      },
+      "id": "52a4d5c2-cc29-4c49-9b77-4ac0cfb3c0dc",
+      "name": "Normalizar Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "queue",
+        "queue": "virtual-agent-responses",
+        "sendInputData": true,
+        "options": {
+        }
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "f4ce0d9f-5cb4-4b7f-a5fd-f1a0cbad2d24",
+      "name": "Publicar Resposta",
+      "type": "n8n-nodes-base.rabbitmq",
+      "typeVersion": 1.1,
+      "position": [
+        1800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "RabbitMQ Trigger": {
+      "main": [
+        [
+          {
+            "node": "Base Técnica do Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base Técnica do Cliente": {
+      "main": [
+        [
+          {
+            "node": "Preparar Contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Contexto": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Resposta": {
+      "main": [
+        [
+          {
+            "node": "Publicar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "tags": [
+
+  ],
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "desk-n8n-local"
+  },
+  "updatedAt": "2026-05-19T20:54:46Z",
+  "versionCounter": 2,
+  "activeVersionId": null
+}

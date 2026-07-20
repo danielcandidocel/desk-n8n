@@ -1,0 +1,7 @@
+.env
+.n8n/
+*.log
+node_modules/
+dist/
+coverage/
+

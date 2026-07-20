@@ -1,0 +1,452 @@
+{
+  "updatedAt": "2026-05-19T21:45:09Z",
+  "createdAt": "2026-05-19T21:45:09Z",
+  "id": "787ace00-e26e-46a3-9829-3edb6c0ee4c6",
+  "name": "Virtual Agent - Squid Rabbit",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "queue": "virtual-agent-requests",
+        "options": {
+          "acknowledge": "executionFinishes",
+          "jsonParseBody": true,
+          "onlyContent": false,
+          "parallelMessages": 1
+        }
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "54e886ea-3730-4695-ab39-27db94fc1f4b",
+      "name": "RabbitMQ Trigger",
+      "type": "n8n-nodes-base.rabbitmqTrigger",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction text(value) {\n  return String(value ?? '').trim();\n}\n\nfunction cleanMessageBody(payload) {\n  return text(\n    payload.message?.body\n    ?? payload.content?.message?.body\n    ?? payload.content?.body\n    ?? payload.content?.text\n    ?? payload.content?.request?.message\n    ?? payload.chatInput\n    ?? payload.content?.chatInput\n    ?? ''\n  );\n}\n\nreturn items.map((item) => {\n  const payload = item.json ?? {};\n  const company = payload.company ?? payload.content?.company ?? {};\n  const conversation = payload.conversation ?? payload.content?.conversation ?? {};\n  const agent = payload.agent ?? payload.content?.agent ?? {};\n  const companyId = payload.company_id ?? payload.content?.company_id ?? company.id ?? 'unknown';\n  const conversationId = payload.conversation_id ?? payload.content?.conversation_id ?? conversation.id ?? 'unknown';\n  const assistantName = text(agent.name ?? 'Stark') || 'Stark';\n  const messageBody = cleanMessageBody(payload);\n  const sessionKey = 'virtual-agent:' + companyId + ':' + conversationId;\n  const systemMessage = [\n    'Você é Stark, o agente virtual técnico de uma software house especializada em sistemas para hospitais, clínicas e laboratórios.',\n    'Responda sempre em português do Brasil.',\n    'Tom: natural, acolhedor, consultivo e objetivo, sem soar robotizado.',\n    'Use a base de conhecimento e o histórico da conversa antes de responder.',\n    'Se a mensagem for apenas saudação, responda de forma breve e humana.',\n    'Se houver pergunta, dúvida ou problema operacional, responda diretamente com o passo a passo ou com a orientação prática.',\n    'Se a base não for suficiente, retorne JSON válido com handoff_to_human=true e um resumo curto da conversa.',\n    'Nunca use a expressão \"dúvida específica\".',\n    'Não escreva texto fora do JSON final. Não use introdução, explicação, bloco de código ou markdown.',\n    'Retorne somente JSON válido com as chaves: reply, handoff_to_human, assistant_name, confidence, category, notes, summary, handoff_message.'\n  ].join('\\n');\n\n  const history = Array.isArray(payload.timeline)\n    ? payload.timeline.slice(-10).map((entry) => '- ' + text(entry.sender_name ?? entry.author ?? 'Cliente') + ': ' + text(entry.body)).join('\\n')\n    : 'Sem histórico adicional.';\n\n  const chatInput = [\n    'Empresa ID: ' + companyId,\n    'Empresa: ' + text(company.trade_name ?? company.name ?? payload.company_name ?? 'a empresa'),\n    'Agente: ' + assistantName,\n    'Session key: ' + sessionKey,\n    '',\n    'Mensagem do cliente:',\n    messageBody || '(vazio)',\n    '',\n    'Histórico recente:',\n    history,\n    '',\n    'Base técnica:',\n    text(payload.knowledge_base ?? payload.content?.knowledge_base ?? 'Base técnica vazia.')\n  ].join('\\n');\n\n  return {\n    json: {\n      ...payload,\n      company,\n      conversation,\n      agent,\n      company_id: companyId,\n      conversation_id: conversationId,\n      assistant_name: assistantName,\n      session_key: sessionKey,\n      systemMessage,\n      chatInput,\n      message: payload.message ?? payload.content?.message ?? {},\n      replied_to_message_id: Number(payload.message_id ?? payload.replied_to_message_id ?? 0) || null,\n      external_message_id: String(payload.external_message_id ?? ('virtual-agent-response:' + (payload.message_id ?? Date.now())))\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        840,
+        300
+      ],
+      "id": "5d23309b-7c65-48f2-ba20-6c0a9fdcea2f",
+      "name": "Preparar Contexto"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "={{ $json.systemMessage }}",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1080,
+        300
+      ],
+      "id": "5d23309b-7c65-48f2-ba20-6c0a9fdcea2f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {
+          "thinking": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.4,
+      "position": [
+        800,
+        0
+      ],
+      "id": "d4639d1d-3d7e-4424-922b-070680bb1d5f",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "RfwYN4RHoCgxiCnl",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.session_key }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        0
+      ],
+      "id": "69cd32b7-0257-4b68-847b-8ae6637f29b2",
+      "name": "Postgres Chat Memory",
+      "credentials": {
+        "postgres": {
+          "id": "vLScBtRojaotKwg9",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Base de conhecimento",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        -16
+      ],
+      "id": "e24a4af1-7dab-4721-a696-38b0e396fb73",
+      "name": "Supabase Vector Store",
+      "credentials": {
+        "supabaseApi": {
+          "id": "EkRbACQvQFUEW8a8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Upload your data to test RAG",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Upload your file(s)",
+              "fieldType": "file",
+              "acceptFileTypes": ".pdf, .csv, .doc, .docx",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        256
+      ],
+      "id": "3e0da3ca-a1a4-404e-b4c8-967fdb6225d0",
+      "name": "Upload your file here",
+      "webhookId": "be64dc3c-f191-4e33-9ff4-bc3a37cc882d"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        256
+      ],
+      "id": "f2ccbfd5-7348-4bd5-b608-e426f323bbe5",
+      "name": "Supabase Vector Store1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "EkRbACQvQFUEW8a8",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        752,
+        464
+      ],
+      "id": "9fd0a9b5-beea-4d28-8a29-7b9911275273",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "6zQiLigdyF9jyXPF",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "\nCarregar arquivo de conhecimento",
+        "height": 80,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "573ed3f8-d60c-459a-8086-b4e679ec719d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Agente de interação",
+        "height": 80
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        336,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "3a162e83-a448-4b45-a3f4-d0eeac4986bb",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        992,
+        464
+      ],
+      "id": "0a1f8ae2-c180-4261-811e-7c63c1e59ae2",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        128
+      ],
+      "id": "816a028e-f855-43a0-9a2d-612ef79e7420",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "6zQiLigdyF9jyXPF",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction text(value) {\n  return String(value ?? '').trim();\n}\n\nfunction stripCodeFences(raw) {\n  return raw\n    .replace(new RegExp('^\\s*```(?:json)?\\s*', 'i'), '')\n    .replace(new RegExp('\\s*```\\s*$', 'i'), '')\n    .replace(new RegExp('^\\s*json\\s*', 'i'), '')\n    .trim();\n}\n\nfunction extractJsonCandidate(raw) {\n  const cleaned = stripCodeFences(raw);\n  if (!cleaned) {\n    return '';\n  }\n\n  const firstBrace = cleaned.indexOf('{');\n  const lastBrace = cleaned.lastIndexOf('}');\n  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {\n    return cleaned.slice(firstBrace, lastBrace + 1).trim();\n  }\n\n  return cleaned;\n}\n\nfunction parseMaybeJson(value) {\n  if (value && typeof value === 'object' && !Array.isArray(value)) {\n    return value;\n  }\n\n  const raw = text(value);\n  if (!raw) {\n    return {};\n  }\n\n  const candidates = [raw, stripCodeFences(raw), extractJsonCandidate(raw)];\n  for (const candidate of candidates) {\n    if (!candidate) continue;\n    try {\n      const parsed = JSON.parse(candidate);\n      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {\n        return parsed;\n      }\n    } catch (error) {\n      // Try next candidate.\n    }\n  }\n\n  return { reply: stripCodeFences(raw) };\n}\n\nreturn items.map((item) => {\n  const payload = item.json ?? {};\n  const aiOutput = parseMaybeJson(\n    payload.output ?? payload.response ?? payload.text ?? payload.message ?? payload.content ?? payload.answer ?? ''\n  );\n\n  const reply = text(\n    aiOutput.reply\n    ?? payload.reply\n    ?? payload.output\n    ?? payload.response\n    ?? payload.text\n    ?? payload.message\n    ?? payload.content\n    ?? payload.answer\n  );\n\n  return {\n    json: {\n      ...payload,\n      ...aiOutput,\n      reply,\n      handoff_to_human: Boolean(aiOutput.handoff_to_human ?? payload.handoff_to_human ?? false),\n      assistant_name: text(aiOutput.assistant_name ?? payload.assistant_name ?? 'Stark') || 'Stark',\n      confidence: Number(aiOutput.confidence ?? payload.confidence ?? 0.9),\n      category: text(aiOutput.category ?? payload.category ?? 'suporte') || 'suporte',\n      notes: text(aiOutput.notes ?? payload.notes ?? ''),\n      summary: text(aiOutput.summary ?? payload.summary ?? ''),\n      handoff_message: text(aiOutput.handoff_message ?? payload.handoff_message ?? ''),\n    },\n  };\n});"
+      },
+      "id": "1de04b94-73fb-49c3-8b7f-8ec872db6e4f",
+      "name": "Normalizar Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "queue",
+        "queue": "virtual-agent-responses",
+        "sendInputData": true,
+        "options": {}
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "f5f23938-459c-4870-80b2-3ac02d8943fe",
+      "name": "Publicar Resposta",
+      "type": "n8n-nodes-base.rabbitmq",
+      "typeVersion": 1.1,
+      "position": [
+        1360,
+        -192
+      ]
+    }
+  ],
+  "connections": {
+    "RabbitMQ Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preparar Contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload your file here": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Resposta": {
+      "main": [
+        [
+          {
+            "node": "Publicar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Contexto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "desk-n8n-local"
+  },
+  "versionId": "ccf3bcdb-4875-48a4-ae98-f8254df51c8c",
+  "activeVersionId": null,
+  "versionCounter": 1,
+  "triggerCount": 0,
+  "tags": [],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

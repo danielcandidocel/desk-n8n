@@ -1,0 +1,357 @@
+{
+  "updatedAt": "2026-05-19T19:58:45.228Z",
+  "createdAt": "2026-05-19T19:23:19.507Z",
+  "id": "75d69ba8-18eb-4843-8762-ec20da14b820",
+  "name": "Virtual Agent - Rabbit Squid Hybrid",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "queue": "virtual-agent-requests",
+        "options": {
+          "acknowledge": "executionFinishes",
+          "jsonParseBody": true,
+          "onlyContent": false,
+          "parallelMessages": 1
+        }
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "6e3b5984-0e9e-4f85-8391-f3ed736f5c69",
+      "name": "RabbitMQ Trigger",
+      "type": "n8n-nodes-base.rabbitmqTrigger",
+      "typeVersion": 1,
+      "position": [
+        520,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\nconst knowledgeBase = \"Apresentação da empresa\\nSomos uma software house especializada em implantação, sustentação e evolução de sistemas para hospitais, clínicas, laboratórios e centros de diagnóstico.\\nAtuamos em suporte funcional e técnico, análise de incidentes, resolução de bugs, instalação, parametrização, treinamento, go-live assistido e acompanhamento pós-implantação.\\nNosso foco é garantir continuidade operacional, segurança da informação, rastreabilidade e rapidez no atendimento.\\n\\n---\\nEscopo de atendimento\\nAtendemos dúvidas sobre:\\n1. instalação e atualização do sistema\\n2. acesso de usuários, perfis e permissões\\n3. cadastro de pacientes, convênios, médicos, setores, unidades e serviços\\n4. faturamento, autorização, glosas e integrações\\n5. exames, laudos, agendamentos, internação e ambulatório\\n6. relatórios, dashboards, telas operacionais e parametrizações\\n7. erros, falhas, lentidão, inconsistências e comportamento inesperado\\n8. dúvidas de uso e orientação funcional\\n9. implantação, migração e pós-implantação\\n10. suporte de rotina, incidentes críticos e análise técnica\\n\\n---\\nInstalação, atualização e implantação\\nA implantação do sistema normalmente segue estas etapas:\\n1. levantamento de requisitos\\n2. definição de escopo e módulos\\n3. preparação do ambiente\\n4. configuração de bancos, serviços e integrações\\n5. cadastro base e parametrização inicial\\n6. validação com usuários-chave\\n7. testes assistidos\\n8. treinamento da operação\\n9. virada assistida para produção\\n10. monitoramento pós-go-live\\n\\nEm casos de instalação, atualização ou implantação, solicitar:\\n- nome da instituição\\n- módulo afetado\\n- ambiente (teste, homologação ou produção)\\n- versão do sistema, se houver\\n- data e horário do problema\\n- etapa exata em que a operação travou\\n- print, vídeo, log ou mensagem exibida\\n- se houve mudança recente de infraestrutura, regra, versão ou integração\\n\\nSe houver atualização, verificar também:\\n- necessidade de backup\\n- janela de manutenção\\n- impacto em integrações\\n- dependências de serviço\\n- necessidade de rollback\\n\\n---\\nSuporte funcional\\nQuando o cliente tiver dúvida de uso do sistema:\\n- explicar o caminho da tela de forma objetiva\\n- citar o nome exato de botões, menus e campos\\n- indicar a sequência de ações correta\\n- confirmar se a permissão do usuário permite executar a tarefa\\n- informar quando o comportamento depende de parametrização por unidade, perfil ou módulo\\n- pedir print da tela atual caso a localização da função não esteja clara\\n\\nO suporte funcional deve responder perguntas como:\\n- como cadastrar um paciente\\n- como emitir um laudo\\n- como abrir um atendimento\\n- como gerar um faturamento\\n- como configurar uma agenda\\n- como lançar um procedimento\\n- como localizar um exame ou histórico\\n\\nCadastro de paciente - procedimento padrão\\n1. Acesse o menu de pacientes ou cadastro.\\n2. Clique em novo cadastro ou incluir paciente.\\n3. Preencha os dados principais: nome completo, documento, data de nascimento, sexo, telefone e e-mail.\\n4. Informe endereço, convênio, responsável, unidade ou observações, quando necessário.\\n5. Revise os campos obrigatórios e salve o cadastro.\\n6. Se o sistema pedir validação, confirme se o paciente já existe antes de salvar novamente.\\n7. Se a tela for parametrizada por unidade ou perfil, verifique a permissão do usuário antes de orientar.\\n\\n---\\nSuporte técnico e bugs\\nQuando o cliente relatar erro ou falha:\\n1. confirmar usuário, perfil e unidade\\n2. confirmar módulo e tela\\n3. confirmar data e horário da ocorrência\\n4. pedir a mensagem exata do erro\\n5. verificar se o problema é intermitente ou constante\\n6. verificar se afeta um usuário, um setor ou toda a operação\\n7. identificar se é ambiente de teste, homologação ou produção\\n8. classificar impacto operacional\\n\\nSe possível, pedir também:\\n- print da tela\\n- gravação curta\\n- trecho de log\\n- passo a passo para reproduzir\\n- navegador, dispositivo ou terminal usado\\n- se começou após alguma alteração recente\\n\\nNunca inventar solução sem evidência. Se o problema envolver dados, banco, API, fila, autorização, desempenho ou integração, seguir para análise técnica ou escalar para especialista humano.\\n\\n---\\nIntegrações\\nIntegrações comuns no cenário hospitalar podem envolver:\\n- laboratório\\n- equipamento médico\\n- faturamento e convênios\\n- portal de laudos\\n- autenticação e login\\n- filas de processamento\\n- mensageria assíncrona\\n- APIs externas e webhooks\\n- importação e exportação de dados\\n\\nSe uma integração falhar, verificar:\\n- credenciais e permissões\\n- URL e ambiente corretos\\n- tempo de resposta e timeout\\n- retorno HTTP e payload\\n- fila de processamento e consumidores\\n- logs da aplicação e do integrador\\n- certificados, chaves ou tokens, quando aplicável\\n\\n---\\nPriorização de chamados\\nPrioridade alta:\\n- sistema fora do ar\\n- falha que impede atendimento a pacientes\\n- erro em faturamento ou emissão crítica\\n- indisponibilidade em produção\\n- risco de parar a operação hospitalar\\n- perda de dados ou inconsistência grave\\n\\nPrioridade média:\\n- erro com contorno manual\\n- falha em um fluxo específico\\n- inconsistência de cadastro ou relatório\\n- dúvida funcional que bloqueia parcialmente a equipe\\n\\nPrioridade baixa:\\n- dúvidas de navegação\\n- ajustes não críticos\\n- pedidos de orientação\\n- melhorias e customizações sem urgência operacional\\n\\n---\\nRegras de resposta\\nAo responder ao cliente:\\n- usar português do Brasil\\n- ser objetivo, claro e acolhedor\\n- confirmar o entendimento antes de propor solução\\n- indicar o próximo passo com precisão\\n- solicitar apenas a informação que realmente falta\\n- evitar termos desnecessariamente complexos\\n- não prometer prazo sem validação interna\\n- manter tom técnico, seguro e cordial\\n\\nFormato ideal da resposta:\\n1. reconhecer o problema\\n2. resumir o entendimento\\n3. orientar o próximo passo\\n4. pedir o que faltar\\n5. informar se será necessário escalar\\n\\n---\\nEscalonamento para humano\\nEncaminhar para um atendente humano quando:\\n- o incidente afetar produção\\n- houver risco operacional para o hospital\\n- a base de conhecimento não for suficiente\\n- houver necessidade de análise de logs, banco ou código\\n- a falha depender de validação interna\\n- o cliente pedir investigação detalhada fora do escopo do bot\\n- a resposta envolver análise de segurança, performance ou dados sensíveis\\n\\n---\\nConhecimento operacional\\nO agente deve conhecer que a operação hospitalar pode envolver:\\n- pronto atendimento\\n- ambulatório\\n- internação\\n- centro cirúrgico\\n- laboratório\\n- imagem\\n- recepção\\n- agendamento\\n- cadastro\\n- estoque\\n- financeiro\\n- faturamento\\n- relatórios gerenciais\\n\\n---\\nExemplos de resposta\\nExemplo 1:\\n\\\"Entendi. Você está com dificuldade na emissão do documento no módulo de faturamento. Pode me informar o paciente, a data e a mensagem exibida na tela para eu orientar o próximo passo?\\\"\\n\\nExemplo 2:\\n\\\"Vou te ajudar com isso. Me confirma se o erro acontece em produção ou homologação e, se possível, me envia um print da tela para eu validar a causa.\\\"\\n\\nExemplo 3:\\n\\\"Esse tipo de falha pode impactar a operação do hospital. Vou encaminhar para validação técnica e, enquanto isso, preciso da tela exata, horário e usuário afetado.\\\"\\n\\n---\\nObjetivo final\\nGarantir que o hospital continue operando com segurança, estabilidade e rapidez na resolução dos chamados, mantendo rastreabilidade, boa experiência e continuidade do atendimento.\";\n\nreturn items.map((item) => ({\n  json: {\n    ...(item.json ?? {}),\n    knowledge_base: knowledgeBase,\n    knowledge_matches: [],\n  },\n}));"
+      },
+      "id": "d5fa748f-4134-4873-91f4-ec70932c0668",
+      "name": "Base Técnica do Cliente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction clean(value) {\n  return String(value ?? '').trim();\n}\n\nfunction formatTimeline(timeline) {\n  return (Array.isArray(timeline) ? timeline : [])\n    .slice(-20)\n    .map((entry) => {\n      const direction = clean(entry.direction).toLowerCase() || 'message';\n      const author = clean(entry.sender_name ?? entry.author ?? (direction === 'outbound' ? 'Agente' : 'Cliente')) || (direction === 'outbound' ? 'Agente' : 'Cliente');\n      const body = clean(entry.body);\n      return '- ' + author + ' (' + direction + '): ' + body;\n    })\n    .join('\\n');\n}\n\nreturn items.map((item) => {\n  const payload = item.json ?? {};\n  const company = payload.company ?? {};\n  const agent = payload.agent ?? {};\n  const conversation = payload.conversation ?? {};\n  const message = payload.message ?? {};\n  const timeline = Array.isArray(payload.timeline) ? payload.timeline : [];\n  const knowledgeBase = clean(payload.knowledge_base ?? '');\n  const companyId = payload.company_id ?? company.id ?? 'unknown';\n  const conversationId = payload.conversation_id ?? conversation.id ?? 'unknown';\n  const assistantName = clean(agent.name ?? 'Stark') || 'Stark';\n  const companyName = clean(company.trade_name ?? company.name ?? payload.company_name ?? 'a empresa') || 'a empresa';\n  const messageBody = clean(message.body ?? payload.request?.message ?? '');\n  const recentContext = formatTimeline(timeline);\n  const sessionKey = 'squid-hybrid:' + companyId + ':' + conversationId;\n\n  const systemMessage = [\n    'Você é Stark, assistente virtual técnico de uma software house para hospitais, clínicas, laboratórios e centros de diagnóstico.',\n    'Responda sempre em português do Brasil.',\n    'Tom: natural, acolhedor, objetivo e profissional, sem soar robotizado.',\n    'Se a mensagem for apenas saudação, responda de forma curta e humana.',\n    'Se houver pergunta, dúvida ou problema operacional, use a base técnica e o histórico para responder diretamente com passos claros.',\n    'Se a base não for suficiente, defina handoff_to_human como true e entregue um resumo curto da conversa.',\n    'Nunca use a expressão \"dúvida específica\".',\n    'Retorne somente JSON válido com as chaves: reply, handoff_to_human, assistant_name, confidence, category, notes, summary, handoff_message.'\n  ].join('\\n');\n\n  const chatInput = [\n    'Empresa: ' + companyName,\n    'Agente: ' + assistantName,\n    'Session key: ' + sessionKey,\n    '',\n    'Pergunta do cliente:',\n    messageBody || '(vazio)',\n    '',\n    'Histórico recente da conversa:',\n    recentContext || 'Sem histórico adicional.',\n    '',\n    'Base técnica completa do cliente:',\n    knowledgeBase || 'Base técnica vazia.',\n    '',\n    'Instrução: se houver conteúdo na base que responda a pergunta, responda diretamente com o procedimento.',\n    'Instrução: se não houver base suficiente, faça handoff com um resumo curto.',\n    'Instrução: se a mensagem for apenas saudação, cumprimente de forma breve e convide para explicar o pedido.'\n  ].join('\\n');\n\n  return {\n    json: {\n      ...payload,\n      company,\n      agent,\n      conversation,\n      assistant_name: assistantName,\n      knowledge_base: knowledgeBase,\n      recent_context: recentContext,\n      session_key: sessionKey,\n      systemMessage,\n      chatInput,\n      replied_to_message_id: Number(payload.message_id ?? payload.replied_to_message_id ?? 0) || null,\n      external_message_id: String(payload.external_message_id ?? ('virtual-agent-response:' + (payload.message_id ?? Date.now())))\n    }\n  };\n});"
+      },
+      "id": "35da9a0f-e22b-418a-9378-53197a62317c",
+      "name": "Preparar Contexto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        780,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "={{ $json.systemMessage }}",
+          "maxIterations": 5
+        }
+      },
+      "id": "d46737be-ef30-481b-a374-aeccc5f884cc",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1080,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {
+          "thinking": false
+        }
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "RfwYN4RHoCgxiCnl",
+          "name": "Anthropic account"
+        }
+      },
+      "id": "3cbad453-9f9e-4a3a-bd12-02f218efb7a3",
+      "name": "Anthropic Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.4,
+      "position": [
+        1320,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.session_key }}",
+        "sessionTTL": 604800,
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryRedisChat",
+      "typeVersion": 1.4,
+      "position": [
+        1080,
+        560
+      ],
+      "id": "6b967c63-3db7-4663-923b-34bd5359e03b",
+      "name": "Redis Chat Memory",
+      "credentials": {
+        "redis": {
+          "id": "desk-redis-credential",
+          "name": "Desk Redis"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Base de conhecimento",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+        }
+      },
+      "credentials": {
+        "supabaseApi": {
+          "id": "EkRbACQvQFUEW8a8",
+          "name": "Supabase account"
+        }
+      },
+      "id": "098b7944-41e4-463d-ad43-5b587ff9f7ba",
+      "name": "Supabase Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        1200,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "6zQiLigdyF9jyXPF",
+          "name": "OpenAI account"
+        }
+      },
+      "id": "028eb002-c656-4143-9f29-6791b344d401",
+      "name": "Embeddings OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1060,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const items = $input.all();\n\nfunction text(value) {\n  return String(value ?? '').trim();\n}\n\nfunction extractJsonCandidate(value) {\n  if (typeof value !== 'string') {\n    return null;\n  }\n\n  const trimmed = value.trim();\n  if (!trimmed) {\n    return null;\n  }\n\n  const fencePrefix = new RegExp('^```(?:json)?\\\\s*', 'i');\n  const fenceSuffix = new RegExp('\\\\s*```$', 'i');\n  const prefix = new RegExp('^json\\\\s*', 'i');\n\n  const cleaned = trimmed\n    .replace(fencePrefix, '')\n    .replace(fenceSuffix, '')\n    .replace(prefix, '')\n    .trim();\n\n  if (cleaned.startsWith('{') && cleaned.endsWith('}')) {\n    return cleaned;\n  }\n\n  const firstBrace = cleaned.indexOf('{');\n  const lastBrace = cleaned.lastIndexOf('}');\n\n  if (firstBrace >= 0 && lastBrace > firstBrace) {\n    return cleaned.slice(firstBrace, lastBrace + 1);\n  }\n\n  return null;\n}\n\nfunction parseMaybeJson(value) {\n  if (value && typeof value === 'object') {\n    return value;\n  }\n\n  if (typeof value !== 'string') {\n    return null;\n  }\n\n  const candidate = extractJsonCandidate(value);\n  if (!candidate) {\n    return null;\n  }\n\n  try {\n    return JSON.parse(candidate);\n  } catch {\n    return null;\n  }\n}\n\nfunction buildSummary(payload) {\n  const messageBody = text(payload.message?.body ?? payload.request?.message ?? payload.chatInput);\n  const recent = text(payload.recent_context);\n  const parts = [];\n  if (messageBody) parts.push('Cliente perguntou: ' + messageBody);\n  if (recent) parts.push('Histórico recente: ' + recent);\n  return parts.join('. ');\n}\n\nfunction unwrapPayload(payload) {\n  if (payload && typeof payload === 'object' && payload.json && typeof payload.json === 'object') {\n    return payload.json;\n  }\n\n  return payload;\n}\n\nreturn items.map((item) => {\n  const payload = unwrapPayload(item.json ?? {});\n  const assistantName = text(payload.assistant_name ?? payload.agent?.name ?? 'Stark') || 'Stark';\n  const raw = payload.output ?? payload.text ?? payload.response ?? payload.answer ?? payload.result ?? payload.content ?? payload.reply ?? '';\n  const parsed = parseMaybeJson(raw) ?? parseMaybeJson(payload.reply) ?? parseMaybeJson(payload.final_reply) ?? parseMaybeJson(payload.output) ?? {};\n  const reply = text(parsed.reply ?? parsed.message ?? parsed.output ?? parsed.text ?? parsed.answer ?? payload.final_reply ?? payload.reply ?? raw);\n  const handoffToHuman = Boolean(parsed.handoff_to_human ?? payload.handoff_to_human ?? false);\n  const confidence = Number(parsed.confidence ?? payload.confidence ?? (handoffToHuman ? 0 : 0.9));\n  const category = text(parsed.category ?? payload.category ?? (handoffToHuman ? 'handoff' : 'suporte')) || 'suporte';\n  const notes = text(parsed.notes ?? payload.notes ?? (handoffToHuman ? 'Sem base suficiente para responder com segurança.' : 'Resposta baseada na base técnica do cliente.'));\n  const summary = text(parsed.summary ?? payload.summary ?? buildSummary(payload));\n  const handoffMessage = text(parsed.handoff_message ?? payload.handoff_message ?? 'Vou encaminhar seu atendimento para a equipe dar continuidade.') || 'Vou encaminhar seu atendimento para a equipe dar continuidade.';\n  const externalMessageId = text(parsed.external_message_id ?? payload.external_message_id ?? ('virtual-agent-response:' + (payload.replied_to_message_id ?? payload.message_id ?? Date.now())));\n\n  return {\n    json: {\n      ...payload,\n      company_id: payload.company_id ?? payload.company?.id ?? null,\n      conversation_id: payload.conversation_id ?? null,\n      replied_to_message_id: Number(payload.replied_to_message_id ?? payload.message_id ?? 0) || null,\n      external_message_id: externalMessageId,\n      reply: reply || handoffMessage,\n      handoff_to_human: handoffToHuman,\n      assistant_name: assistantName,\n      confidence,\n      category,\n      notes,\n      summary,\n      handoff_message: handoffMessage,\n    },\n  };\n});\n"
+      },
+      "id": "6d59856c-0cbe-4926-8b3a-1629034df2c0",
+      "name": "Normalizar Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1560,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "queue",
+        "queue": "virtual-agent-responses",
+        "sendInputData": true,
+        "options": {
+        }
+      },
+      "credentials": {
+        "rabbitmq": {
+          "id": "desk-rabbitmq-credential",
+          "name": "Desk RabbitMQ"
+        }
+      },
+      "id": "34e49040-da9e-4a17-b42f-4c11e3d5ec8b",
+      "name": "Publicar Resposta",
+      "type": "n8n-nodes-base.rabbitmq",
+      "typeVersion": 1.1,
+      "position": [
+        1800,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "RabbitMQ Trigger": {
+      "main": [
+        [
+          {
+            "node": "Base Técnica do Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base Técnica do Cliente": {
+      "main": [
+        [
+          {
+            "node": "Preparar Contexto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Contexto": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Resposta": {
+      "main": [
+        [
+          {
+            "node": "Publicar Resposta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redis Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "desk-n8n-local"
+  },
+  "pinData": {
+  },
+  "versionId": "ecbfe25a-bad9-4e54-8f71-d4b0ba8cea98",
+  "activeVersionId": null,
+  "versionCounter": 2,
+  "triggerCount": 0,
+  "tags": [
+
+  ],
+  "shared": [
+    {
+      "updatedAt": "2026-05-19T19:23:19.507Z",
+      "createdAt": "2026-05-19T19:23:19.507Z",
+      "role": "workflow:owner",
+      "workflowId": "75d69ba8-18eb-4843-8762-ec20da14b820",
+      "projectId": "XQZMlbT4rMQhAa2t",
+      "project": {
+        "updatedAt": "2026-05-18T15:44:02.490Z",
+        "createdAt": "2026-05-18T15:32:02.033Z",
+        "id": "XQZMlbT4rMQhAa2t",
+        "name": "Daniel Candido <danielcandidocel@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "51beeb78-f758-41ef-8c0c-ca150924be2e"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}

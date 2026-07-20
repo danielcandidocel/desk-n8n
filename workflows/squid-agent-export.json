@@ -1,0 +1,374 @@
+[
+  {
+    "updatedAt": "2026-05-19T18:59:38.287Z",
+    "createdAt": "2026-05-19T15:28:39.227Z",
+    "id": "oBKGEMNrLvo45K2u",
+    "name": "Squid agent",
+    "description": null,
+    "active": false,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.4,
+        "position": [
+          640,
+          -192
+        ],
+        "id": "5d3e58b8-1dde-49e1-839c-4691452e8ece",
+        "name": "When chat message received",
+        "webhookId": "dc25753b-ace8-4f8d-89d2-80807b96469e"
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "Prompt para Agente Especialista em Squidesk\n🤖 Perfil e Contexto\nSeu nome Squidy e Você é o SquidExpert, um assistente virtual especializado na plataforma Squiddesk. Sua missão é ajudar empresas a entenderem como centralizar o atendimento, automatizar processos e vender mais usando a ferramenta. Você é direto, consultivo e focado em produtividade.\n Seja sempre educado e paciente com o usuário\n\n- Objetivos de Resposta\nAo explicar as funções, foque no benefício prático (o que o cliente ganha) e não apenas no nome técnico da funcionalidade.\nSempre consulte a base de conhecimento no supabase para dar as respostas mesmo que sejam simples.\n\n- Diretrizes de Estilo\nUse negrito para destacar termos importantes.\n\nUtilize listas (bullet points) para facilitar a leitura.\n\nSempre termine a explicação de uma função com um exemplo de uso (ex: \"Imagine que seu atendente precisa de fornecer detalhes do produto...\").\n\nSe o usuário perguntar sobre preços ou implementações específicas, oriente-o a falar com um consultor oficial da Squidesk, pois você foca em funcionalidades.\n\nDica de Ouro para o seu Agente:\n\"Se o usuário parecer frustrado com a desorganização atual dele, use empatia e mostre como a função X da Squidesk resolve especificamente essa dor.\""
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 3.1,
+        "position": [
+          912,
+          -192
+        ],
+        "id": "5d23309b-7c65-48f2-ba20-6c0a9fdcea2f",
+        "name": "AI Agent"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "claude-sonnet-4-6",
+            "cachedResultName": "Claude Sonnet 4.6"
+          },
+          "options": {
+            "thinking": false
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+        "typeVersion": 1.4,
+        "position": [
+          800,
+          0
+        ],
+        "id": "d4639d1d-3d7e-4424-922b-070680bb1d5f",
+        "name": "Anthropic Chat Model",
+        "credentials": {
+          "anthropicApi": {
+            "id": "RfwYN4RHoCgxiCnl",
+            "name": "Anthropic account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "contextWindowLength": 15
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+        "typeVersion": 1.3,
+        "position": [
+          944,
+          0
+        ],
+        "id": "69cd32b7-0257-4b68-847b-8ae6637f29b2",
+        "name": "Postgres Chat Memory",
+        "credentials": {
+          "postgres": {
+            "id": "vLScBtRojaotKwg9",
+            "name": "Postgres account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "retrieve-as-tool",
+          "toolDescription": "Base de conhecimento",
+          "tableName": {
+            "__rl": true,
+            "value": "documents",
+            "mode": "list",
+            "cachedResultName": "documents"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "typeVersion": 1.3,
+        "position": [
+          1104,
+          -16
+        ],
+        "id": "e24a4af1-7dab-4721-a696-38b0e396fb73",
+        "name": "Supabase Vector Store",
+        "credentials": {
+          "supabaseApi": {
+            "id": "EkRbACQvQFUEW8a8",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "formTitle": "Upload your data to test RAG",
+          "formFields": {
+            "values": [
+              {
+                "fieldLabel": "Upload your file(s)",
+                "fieldType": "file",
+                "acceptFileTypes": ".pdf, .csv, .doc, .docx",
+                "requiredField": true
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.formTrigger",
+        "typeVersion": 2.2,
+        "position": [
+          656,
+          256
+        ],
+        "id": "3e0da3ca-a1a4-404e-b4c8-967fdb6225d0",
+        "name": "Upload your file here",
+        "webhookId": "be64dc3c-f191-4e33-9ff4-bc3a37cc882d"
+      },
+      {
+        "parameters": {
+          "mode": "insert",
+          "tableName": {
+            "__rl": true,
+            "value": "documents",
+            "mode": "list",
+            "cachedResultName": "documents"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+        "typeVersion": 1.3,
+        "position": [
+          864,
+          256
+        ],
+        "id": "f2ccbfd5-7348-4bd5-b608-e426f323bbe5",
+        "name": "Supabase Vector Store1",
+        "credentials": {
+          "supabaseApi": {
+            "id": "EkRbACQvQFUEW8a8",
+            "name": "Supabase account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          752,
+          464
+        ],
+        "id": "9fd0a9b5-beea-4d28-8a29-7b9911275273",
+        "name": "Embeddings OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "6zQiLigdyF9jyXPF",
+            "name": "OpenAI account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "content": "\nCarregar arquivo de conhecimento",
+          "height": 80,
+          "width": 256
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          336,
+          272
+        ],
+        "typeVersion": 1,
+        "id": "573ed3f8-d60c-459a-8086-b4e679ec719d",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "content": "Agente de interação",
+          "height": 80
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          336,
+          -160
+        ],
+        "typeVersion": 1,
+        "id": "3a162e83-a448-4b45-a3f4-d0eeac4986bb",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "dataType": "binary",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+        "typeVersion": 1.1,
+        "position": [
+          992,
+          464
+        ],
+        "id": "0a1f8ae2-c180-4261-811e-7c63c1e59ae2",
+        "name": "Default Data Loader"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          1104,
+          128
+        ],
+        "id": "816a028e-f855-43a0-9a2d-612ef79e7420",
+        "name": "Embeddings OpenAI1",
+        "credentials": {
+          "openAiApi": {
+            "id": "6zQiLigdyF9jyXPF",
+            "name": "OpenAI account"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Anthropic Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Postgres Chat Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Supabase Vector Store": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload your file here": {
+        "main": [
+          [
+            {
+              "node": "Supabase Vector Store1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Supabase Vector Store1",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Default Data Loader": {
+        "ai_document": [
+          [
+            {
+              "node": "Supabase Vector Store1",
+              "type": "ai_document",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Embeddings OpenAI1": {
+        "ai_embedding": [
+          [
+            {
+              "node": "Supabase Vector Store",
+              "type": "ai_embedding",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate"
+    },
+    "staticData": null,
+    "meta": {
+      "templateCredsSetupCompleted": true
+    },
+    "pinData": {},
+    "versionId": "9fd3bf52-e63a-480c-a25a-15f506047874",
+    "activeVersionId": null,
+    "versionCounter": 11,
+    "triggerCount": 0,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-05-19T15:28:39.227Z",
+        "createdAt": "2026-05-19T15:28:39.227Z",
+        "role": "workflow:owner",
+        "workflowId": "oBKGEMNrLvo45K2u",
+        "projectId": "XQZMlbT4rMQhAa2t",
+        "project": {
+          "updatedAt": "2026-05-18T15:44:02.490Z",
+          "createdAt": "2026-05-18T15:32:02.033Z",
+          "id": "XQZMlbT4rMQhAa2t",
+          "name": "Daniel Candido <danielcandidocel@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "creatorId": "51beeb78-f758-41ef-8c0c-ca150924be2e"
+        }
+      }
+    ],
+    "versionMetadata": {
+      "name": null,
+      "description": null
+    }
+  }
+]
