@@ -53,9 +53,9 @@ services:
       DB_POSTGRESDB_SCHEMA: public
       GENERIC_TIMEZONE: Europe/Lisbon
       TZ: Europe/Lisbon
-      DESK_APP_URL: ${DESK_APP_URL:-http://host.docker.internal:8080}
+      DESK_APP_URL: ${DESK_APP_URL:-http://nginx}
       DESK_APP_WEBHOOK_SECRET: ${DESK_APP_WEBHOOK_SECRET:-}
-      RABBITMQ_HOST: ${RABBITMQ_HOST:-host.docker.internal}
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
       RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
       RABBITMQ_USER: ${RABBITMQ_USER:-desk}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-desk}
@@ -70,7 +70,15 @@ services:
       - n8n_data:/home/node/.n8n
       - ./workflows:/files/workflows:ro
       - ./scripts:/files/scripts:ro
+    networks:
+      - default
+      - desk_shared
 
 volumes:
   n8n_data:
   n8n_postgres_data:
+
+networks:
+  desk_shared:
+    external: true
+    name: desk_shared
