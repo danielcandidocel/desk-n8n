@@ -1,0 +1,8 @@
+services:
+  n8n:
+    environment:
+      N8N_HOST: nservice.synapdesk.com.br
+      N8N_WEBHOOK_URL: https://nservice.synapdesk.com.br/
+      N8N_EDITOR_BASE_URL: https://nservice.synapdesk.com.br/
+      N8N_PROXY_HOPS: "1"
+      N8N_SECURE_COOKIE: "true"

@@ -24,6 +24,16 @@ docker compose up -d
 - usuário: `admin`
 - senha: `admin123`
 
+## Publicar no servidor
+
+O Compose padrão mantém as URLs locais em `localhost`. Para produção, use o override `docker-compose.production.yml`, que configura as URLs externas em `https://nservice.synapdesk.com.br/` sem alterar o ambiente local:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.production.yml up -d --force-recreate n8n
+```
+
+O proxy reverso deve encaminhar `X-Forwarded-For`, `X-Forwarded-Host` e `X-Forwarded-Proto` para o n8n. A variável `N8N_PROXY_HOPS=1` informa ao n8n que há um proxy na frente dele.
+
 Na primeira subida, o container importa automaticamente os arquivos `.json` da pasta `workflows`.
 Se houver arquivos em `credentials/`, eles também entram no banco antes dos workflows.
 
